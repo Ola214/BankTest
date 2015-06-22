@@ -5,8 +5,10 @@
  */
 package com.ola.server;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -43,4 +45,56 @@ public class Bank {
         userList.remove(user);
     }
     
+    public Double getAccountState(Integer accountNumber){
+        for(User user: userList){
+            for(Account account: user.getAccountList()){
+                if(account.getId().compareTo(accountNumber)==0){
+                    return account.getAccountState();
+                }
+            }
+        }
+        return null;
+    }
+    
+    public Map<Integer, Double> getAccountStatesOfUserAt(Integer idUser){
+        Map<Integer, Double> accountsMap = new HashMap<>();
+        for(User user: userList){
+            if(user.getId().compareTo(idUser)==0){
+                for(Account account: user.getAccountList()){
+                    accountsMap.put(account.getId(), account.getAccountState());
+                }
+            }
+        }
+        return accountsMap;
+    }
+    
+    /**
+     * Adds money to account
+     * @param accountNumber
+     * @param amount
+     */
+    public void deposit(Integer accountNumber, Double amount){
+        for(User user: userList){
+            for(Account account: user.getAccountList()){
+                if(account.getId().compareTo(accountNumber)==0){
+                    account.setAccountState(account.getAccountState() + amount);
+                }
+            }
+        }
+    }
+    
+    /**
+     * Withdraw some money from account
+     * @param accountNumber
+     * @param amount
+     */
+    public void withdraw(Integer accountNumber, Double amount){
+        for(User user: userList){
+            for(Account account: user.getAccountList()){
+                if(account.getId().compareTo(accountNumber)==0){
+                    account.setAccountState(account.getAccountState() - amount);
+                }
+            }
+        }
+    }
 }
