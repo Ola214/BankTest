@@ -5,119 +5,38 @@
  */
 package com.ola.server;
 
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
 
 /**
  *
  * @author Olaa
  */
-public class Bank implements BankInterface{
-    private static Integer counter = 0;
-    private Integer id;
-    private List<User> userList;
+public interface Bank {
     
-    public Bank(){
-        id = counter;
-        counter++;
-        userList = new LinkedList<>();
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public List<User> getUserList() {
-        return userList;
-    }
+    Integer getId();
+            
+    Double getAccountState(Integer accountNumber) throws NoAccountFoundException;
     
-    @Override
-    public void addUser(User user){
-        userList.add(user);
-    }
-
-    @Override
-    public User getUserAt(Integer index){
-        return userList.get(index);
-    }
+    Map<Integer, Double> getAccountStatesOfUserAtSurname(String surname) throws NoUserFoundException;
     
-    @Override
-    public void deleteUser(User user){
-        userList.remove(user);
-    }
+    void deposit(Integer accountNumber, Double amount) throws NegativeNumberException;
     
-    @Override
-    public Double getAccountState(Integer accountNumber) throws NoAccountFoundException{
-        for(User user: userList){
-            for(Account account: user.getAccountList()){
-                if(account.getId().compareTo(accountNumber)==0){
-                    return account.getAccountState();
-                }
-            }
-        }
-        throw new NoAccountFoundException();
-    }
+    void addUser(User user);
     
-    @Override
-    public Map<Integer, Double> getAccountStatesOfUserAtSurname(String surname) throws NoUserFoundException{
-        Map<Integer, Double> accountsMap = new HashMap<>();
-        for(User user: userList){
-            if(user.getSurname().equals(surname)){
-                for(Account account: user.getAccountList()){
-                    accountsMap.put(account.getId(), account.getAccountState());
-                }
-            }
-        }
-        if(!accountsMap.isEmpty())
-            return accountsMap;
-        
-        throw new NoUserFoundException();  
-    }
+    User getUserAt(Integer index);
+    
+    void deleteUser(User user);
+    
+    void withdraw(Integer accountNumber, Double amount) throws NegativeNumberException, DebetException;
+    
+    class NoAccountFoundException extends Exception{}; //you must warn when you use Exception, if u use RuntimeException you don't have to(u don't have to specify it)
+    
+    class NoUserFoundException extends Exception{};
+    
+    class DebetException extends Exception{};
     
     /**
-     * Adds money to account
-     * @param accountNumber
-     * @param amount
-     * @throws com.ola.server.BankInterface.NegativeNumberException
+     * Negative number - 0 or below
      */
-    @Override
-    public void deposit(Integer accountNumber, Double amount) throws NegativeNumberException{
-        if(amount <= 0)
-            throw new NegativeNumberException();
-        
-        for(User user: userList){
-            for(Account account: user.getAccountList()){
-                if(account.getId().compareTo(accountNumber)==0){
-                    account.setAccountState(account.getAccountState() + amount);
-                }
-            }
-        }
-    }
-    
-    /**
-     * Withdraw some money from account
-     * @param accountNumber
-     * @param amount
-     * @throws com.ola.server.BankInterface.NegativeNumberException
-     * @throws com.ola.server.BankInterface.DebetException
-     */
-    @Override
-    public void withdraw(Integer accountNumber, Double amount) throws NegativeNumberException, DebetException{
-        if(amount <= 0)
-            throw new NegativeNumberException();
-        
-        for(User user: userList){
-            for(Account account: user.getAccountList()){
-                if(account.getId().compareTo(accountNumber)==0){
-                    if((account.getAccountState() - amount) < 0)
-                        throw new DebetException();
-                        
-                    account.setAccountState(account.getAccountState() - amount);
-                }
-            }
-        }
-    }
-
+    class NegativeNumberException extends Exception{};
 }
