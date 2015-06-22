@@ -27,6 +27,7 @@ public class BankTestMain {
             bank.getAccountState(2);
         } catch (Bank.NoAccountFoundException ex) {
             System.out.println("No account found");
+            ex.printStackTrace();
         }
 
         User user = new User("ala", "makota", "a@gmail.com", bank.getId());
@@ -45,6 +46,7 @@ public class BankTestMain {
                     bank.getAccountStatesOfUserAtSurname(surname);
                     called = true;
                 } catch (Bank.NoUserFoundException ex) {
+                    ex.printStackTrace();
                 }
             }
             ++counter;
@@ -60,8 +62,9 @@ public class BankTestMain {
                 bank.withdraw(account.getId(), money);
                 called = true;
             } catch (Bank.DebetException de) {
-                
+                de.printStackTrace();
             } catch (Bank.NegativeNumberException ex) {
+                ex.printStackTrace();
                 System.exit(0);
             }
         }
