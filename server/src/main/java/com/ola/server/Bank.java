@@ -14,7 +14,7 @@ import java.util.Map;
  *
  * @author Olaa
  */
-public class Bank {
+public class Bank implements BankInterface{
     private static Integer counter = 0;
     private Integer id;
     private List<User> userList;
@@ -33,19 +33,23 @@ public class Bank {
         return userList;
     }
     
+    @Override
     public void addUser(User user){
         userList.add(user);
     }
 
+    @Override
     public User getUserAt(Integer index){
         return userList.get(index);
     }
     
+    @Override
     public void deleteUser(User user){
         userList.remove(user);
     }
     
-    public Double getAccountState(Integer accountNumber){
+    @Override
+    public Double getAccountState(Integer accountNumber) throws NoAccountFoundException{
         for(User user: userList){
             for(Account account: user.getAccountList()){
                 if(account.getId().compareTo(accountNumber)==0){
@@ -53,10 +57,11 @@ public class Bank {
                 }
             }
         }
-        return null;
+        throw new NoAccountFoundException();
     }
     
-    public Map<Integer, Double> getAccountStatesOfUserAt(String surname){
+    @Override
+    public Map<Integer, Double> getAccountStatesOfUserAtSurname(String surname) throws NoUserFoundException{
         Map<Integer, Double> accountsMap = new HashMap<>();
         for(User user: userList){
             if(user.getSurname().equals(surname)){
@@ -65,15 +70,23 @@ public class Bank {
                 }
             }
         }
-        return accountsMap;
+        if(!accountsMap.isEmpty())
+            return accountsMap;
+        
+        throw new NoUserFoundException();  
     }
     
     /**
      * Adds money to account
      * @param accountNumber
      * @param amount
+     * @throws com.ola.server.BankInterface.NegativeNumberException
      */
-    public void deposit(Integer accountNumber, Double amount){
+    @Override
+    public void deposit(Integer accountNumber, Double amount) throws NegativeNumberException{
+        if(amount <= 0)
+            throw new NegativeNumberException();
+        
         for(User user: userList){
             for(Account account: user.getAccountList()){
                 if(account.getId().compareTo(accountNumber)==0){
@@ -87,14 +100,24 @@ public class Bank {
      * Withdraw some money from account
      * @param accountNumber
      * @param amount
+     * @throws com.ola.server.BankInterface.NegativeNumberException
+     * @throws com.ola.server.BankInterface.DebetException
      */
-    public void withdraw(Integer accountNumber, Double amount){
+    @Override
+    public void withdraw(Integer accountNumber, Double amount) throws NegativeNumberException, DebetException{
+        if(amount <= 0)
+            throw new NegativeNumberException();
+        
         for(User user: userList){
             for(Account account: user.getAccountList()){
                 if(account.getId().compareTo(accountNumber)==0){
+                    if((account.getAccountState() - amount) < 0)
+                        throw new DebetException();
+                        
                     account.setAccountState(account.getAccountState() - amount);
                 }
             }
         }
     }
+
 }
