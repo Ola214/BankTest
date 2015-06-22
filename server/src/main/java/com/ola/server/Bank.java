@@ -10,5 +10,19 @@ package com.ola.server;
  * @author Olaa
  */
 public class Bank {
+    private static Integer counter = 0;
+    private Integer id;
+    
+    public Bank(){
+        id = counter;
+        counter++;
+    }
+
+    public Integer getId() {
+        return id;
+    }
+
+    
+    
     
 }

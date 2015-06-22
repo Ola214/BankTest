@@ -11,12 +11,14 @@ package com.ola.server;
  */
 public class Account {
 
-    private static Integer id = 0;
+    private static Integer counter = 0;
+    private Integer id;
     private Integer idUser;
     private Double accountState;
     
     public Account(Integer idUser){
-        id++;
+        id = counter;
+        counter++;
         this.idUser = idUser;
         accountState = 0.00;
     }
@@ -36,5 +38,10 @@ public class Account {
     public void setAccountState(Double accountState) {
         this.accountState = accountState;
     }
+
+    public Integer getId() {
+        return id;
+    }
+    
     
 }

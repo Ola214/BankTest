@@ -15,7 +15,8 @@ import java.util.List;
  */
 public class User {
 
-    private static Integer id = 0;
+    private static Integer counter = 0;
+    private Integer id;
     private Integer idBank;
     private String name;
     private String surname;
@@ -24,7 +25,8 @@ public class User {
 
     
     public User(String name, String surname, String email, Integer idBank){
-        id++;
+        id = counter;
+        counter++;
         accountList = new LinkedList<>();
         this.name = name;
         this.surname = surname;
@@ -78,6 +80,9 @@ public class User {
     public void setIdBank(Integer idBank) {
         this.idBank = idBank;
     }
-    
+
+    public Integer getId() {
+        return id;
+    }
     
 }
