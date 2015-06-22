@@ -26,4 +26,15 @@ public interface BankInterface {
     void deleteUser(User user);
     
     void withdraw(Integer accountNumber, Double amount);
+    
+    class NoAccountFoundException extends RuntimeException{};
+    
+    class NoUserFoundException extends RuntimeException{};
+    
+    class DebetException extends RuntimeException{};
+    
+    /**
+     * Negative number - 0 or below
+     */
+    class NegativeNumber extends RuntimeException{};
 }

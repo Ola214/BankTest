@@ -56,10 +56,10 @@ public class Bank {
         return null;
     }
     
-    public Map<Integer, Double> getAccountStatesOfUserAt(Integer idUser){
+    public Map<Integer, Double> getAccountStatesOfUserAt(String surname){
         Map<Integer, Double> accountsMap = new HashMap<>();
         for(User user: userList){
-            if(user.getId().compareTo(idUser)==0){
+            if(user.getSurname().equals(surname)){
                 for(Account account: user.getAccountList()){
                     accountsMap.put(account.getId(), account.getAccountState());
                 }
